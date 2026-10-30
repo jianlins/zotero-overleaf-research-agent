@@ -1,0 +1,4 @@
+interface:
+  display_name: "Zotero–Overleaf Research Manuscript Agent"
+  short_description: "Research, citations, and verified Overleaf writing"
+  default_prompt: "Use $zotero-overleaf-research-agent for this research manuscript task."

@@ -1,0 +1,20 @@
+# Never commit local browser sessions, secrets, or generated TeX output.
+.codex/config.toml
+.env
+.env.*
+!.env.example
+.zotero/
+citation-key-lock.json
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.pdf
+

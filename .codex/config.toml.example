@@ -1,0 +1,10 @@
+# Copy this file to .codex/config.toml after completing the setup in TEMPLATE.md.
+# It contains no credentials. The browser URL assumes the supplied launcher,
+# which uses an isolated Chrome profile on port 9222. Zotero uses the direct
+# zotero-cli workflow described in AGENTS.md; no Zotero MCP is configured.
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest", "--browserUrl=http://127.0.0.1:9222", "--no-usage-statistics"]
+startup_timeout_ms = 20_000
+
