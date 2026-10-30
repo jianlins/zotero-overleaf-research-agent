@@ -28,22 +28,39 @@ in this repository.
   server configuration.
 - `.agents/scripts/start-research-chrome.sh`, `-linux.sh`, `.ps1`, and `.cmd`:
   separate Chrome profiles for macOS, Linux, and Windows CDP work.
-- `.agents/requirements-pdf-extraction.txt`: the optional, project-scoped
-  Docling dependency declaration used by the PDF converter.
-- `CHATBOT_SETUP_PROMPT.md`: a platform-neutral bootstrap prompt to paste into
-  Codex or OpenCode from a new, empty folder.
+- `.agents/requirements-pdf-extraction.txt`: the Docling dependency declaration
+  used by the PDF converter.
+- `CHATBOT_SETUP_PROMPT.md`: a platform-neutral setup prompt to paste into
+  Codex or OpenCode after creating a project from this template.
 
 ## Use it
 
+Choose the starting path that fits your project:
+
+1. **Creating a GitHub-backed project (recommended):** on this repository's
+   GitHub page, select **Use this template** and create your new repository.
+   This copies the template files into your repository without making this
+   template's development history your project history. Clone *your new
+   repository* afterward if you want a local checkout.
+2. **Starting without Git history:** use GitHub's **Download ZIP** option,
+   extract it, and open the extracted folder in your coding assistant. This is
+   the cleanest option when you do not need a repository yet.
+3. **Using Git directly:** only when a local checkout of this template itself
+   is useful, make it shallow so you do not fetch its full history:
+
 ```bash
-git clone https://github.com/jianlins/zotero-overleaf-research-agent.git
+git clone --depth 1 https://github.com/jianlins/zotero-overleaf-research-agent.git
 cd zotero-overleaf-research-agent
 ```
 
-For a new, empty folder, paste the contents of
-[`CHATBOT_SETUP_PROMPT.md`](CHATBOT_SETUP_PROMPT.md) into Codex or OpenCode.
-It will safely clone this template, perform the local setup, and explain any
-machine-specific prerequisite that still needs you.
+For an automated local bootstrap, open a new empty folder in Codex or OpenCode
+and paste [`CHATBOT_SETUP_PROMPT.md`](CHATBOT_SETUP_PROMPT.md). It first asks
+whether the user has a signed-in GitHub account: use **Use this template** only
+when they do; otherwise use the ZIP. The ZIP route downloads and safely
+flattens the template archive; the repository route shallow-clones the new
+repository after collecting its clone URL. It performs the local setup and
+explains any machine-specific prerequisite that still needs you; it never
+creates or publishes a GitHub repository.
 
 ### Where your work belongs
 
@@ -60,8 +77,8 @@ local rather than entering Git.
 ### Extracting PDF text
 
 The template includes a controlled PDF-to-Markdown command based on Docling.
-It preserves reading order and tables where possible, and never delegates text
-reconstruction to an LLM:
+It preserves reading order and tables where possible. The configured converter
+runs locally; it does not call an LLM or a paid model API.
 
 ```bash
 uv run --python 3.12 \
@@ -73,11 +90,9 @@ uv run --python 3.12 \
 It writes `references/markdown/ZOTEROITEMKEY.md` by default, refuses to
 overwrite it without `--force`, and reports when a scanned PDF must be OCRed
 first. OCR is opt-in through `--ocr` after local Docling OCR setup. Docling
-requires Python 3.10+; `uv` supplies Python 3.12 in the command above. Its
-dependency is declared in
-`.agents/requirements-pdf-extraction.txt`; see
-[`WORKSPACE_LAYOUT.md`](WORKSPACE_LAYOUT.md) for the full contract and model
-license review requirement.
+requires Python 3.10+; `uv` supplies Python 3.12 in the command above. See
+[`WORKSPACE_LAYOUT.md`](WORKSPACE_LAYOUT.md) for the full contract and OCR
+model-license review requirement.
 
 ### Updating the manuscript bibliography
 
@@ -142,21 +157,23 @@ server. The CLI and its project skill originate from the third-party
 assistant → zotero-cli → Zotero Desktop Local API → Zotero library
 ```
 
-### Install the local client
+### Install local tools
 
-The repository includes the project-owned bibliography guard, but it does not
-vendor a machine-specific Python environment or the `zotero-cli` launcher.
-Install the supported client once with uv after installing uv itself:
+After installing [uv](https://docs.astral.sh/uv/), install the Zotero CLI and
+the converter dependency together with one command:
 
 ```bash
-uv tool install "zotero-mcp-server[pdf]==0.13.2"
+uv tool install "zotero-mcp-server[pdf]==0.13.2" \
+  --with-requirements .agents/requirements-pdf-extraction.txt
 zotero-cli config
 python3 .agents/skills/zotero-cli/scripts/test_sync_zotero_bibliography.py
 ```
 
-The test opens only a temporary localhost fake API and does not inspect the
-user's Zotero data. A setup assistant should report a missing `uv` or client
-and wait for explicit permission before installing either package.
+This installs the free, open-source Docling package alongside the CLI. PDF
+conversion remains local and does not incur LLM or model-API charges. The test
+uses only a temporary localhost fake API and does not inspect Zotero data. A
+setup assistant should report a missing `uv` and request permission before
+installing it or these packages.
 
 That is more portable across local coding assistants and avoids loading MCP
 tools when they are unnecessary. A local write/export requires the same command

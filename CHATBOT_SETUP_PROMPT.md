@@ -1,92 +1,100 @@
 # Copy-paste bootstrap prompt
 
-Use this prompt when Codex or OpenCode has been opened in a **new, empty
-folder**. Copy everything below the line into that assistant's chat. It is a
-bootstrap prompt: the repository has not yet been cloned, no local tools are
-assumed to be installed, and nobody is assumed to be signed in to Zotero or
-Overleaf.
+Open Codex or OpenCode in a new, empty project folder and paste the complete
+prompt below. The assistant will ask whether to start from the template ZIP or
+from a repository created with **Use this template**.
 
 ---
 
-Set up this empty folder as a local research-manuscript project using the
+Set up the current folder as a local research-manuscript project based on the
 public `zotero-overleaf-research-agent` template.
 
-This prompt authorizes you to clone the public template repository into the
-current folder; create and edit files inside this project; download and install
-the user-level `uv` tool and the user-level Zotero CLI dependency specified
-below; and run the supplied local verification test. Do not make other external
-changes without asking first. In particular, do not create or publish a GitHub
-repository, push commits, create an Overleaf project, sign in to any service,
-open or modify a normal browser profile, authorize a Zotero write, access a
-Zotero library, or ask for credentials, cookies, passwords, API keys, or a
-browser profile.
+Before you change anything, ask me exactly this question: “Do you have a
+GitHub account and are you signed in? If yes, you can create a repository with
+**Use this template**; otherwise, choose the template ZIP. Which would you
+like to use?” Do not download, clone, or otherwise bootstrap until I answer.
+
+Use the GitHub repository option only if I confirm that I have a GitHub account
+and am signed in. If I choose that option, ask for its clone URL before doing
+anything else. The URL must be for my newly created repository, not this
+template repository. If I do not have an account, am not signed in, or choose
+ZIP, use the public template archive at
+`https://github.com/jianlins/zotero-overleaf-research-agent/archive/refs/heads/main.zip`.
+
+This prompt authorizes you to download the public ZIP or clone that supplied
+public repository, create and edit files inside this project, install the
+user-level `uv` tool and the user-level Zotero CLI and Docling dependencies
+specified below, and run the supplied local verification test. Do not make
+other external changes without asking first. In particular, do not create or
+publish a GitHub repository, push commits, create an Overleaf project, sign in
+to any service, open or modify a normal browser profile, authorize a Zotero
+write, access a Zotero library, or ask for credentials, cookies, passwords,
+API keys, or a browser profile.
 
 Work through this procedure and report the final checklist.
 
-1. **Protect the target folder before cloning.** Confirm the current directory
-   is empty, apart from harmless editor or OS placeholders such as `.DS_Store`,
-   `.gitkeep`, or workspace metadata created by the coding tool. If it contains
-   a real project, source files, a Git repository, or anything whose ownership
-   is unclear, stop and ask me to choose a different empty folder; never merge,
-   delete, overwrite, or clone into it. Check that `git` is available. If it is
-   not, explain that Git must be installed by me (or ask whether I want help
-   installing it) and stop without attempting a clone.
+1. **Protect the target folder.** Before downloading or cloning, confirm that
+   the current directory is empty apart from harmless editor or OS placeholders
+   (for example `.DS_Store`), the downloaded ZIP itself, and temporary files
+   you created for this bootstrap. If it contains a real project, source files,
+   a Git repository, or anything whose ownership is unclear, stop and ask me
+   to choose a different empty folder. Never merge, delete, or overwrite such
+   files.
 
-2. **Fetch the template.** Clone
-   `https://github.com/jianlins/zotero-overleaf-research-agent.git` into the
-   current directory, so the template files are at the project root rather than
-   nested inside a second folder. Do not use a personal access token or any
-   credential. If public network access is unavailable, report the exact failed
-   command and the next local action needed; do not substitute an unverified
-   mirror or fabricate files.
+2. **Fetch the selected starting point.**
 
-3. **Read the project policy before configuring it.** After a successful
-   clone, read `README.md`, `AGENTS.md`, `WORKSPACE_LAYOUT.md`, and
+   - If I chose the GitHub repository option, confirm that the clone URL is for
+     my newly created GitHub repository, then run
+     `git clone --depth 1 REPOSITORY_URL .` so its files land at the current
+     project root. Do not clone the public template repository instead, and do
+     not use credentials or a personal access token.
+   - If I chose ZIP, download the public ZIP into a temporary location, extract
+     it there, and confirm it contains exactly one extracted top-level template
+     directory. Move that directory's contents, including
+     dotfiles, into the current folder without overwriting anything. Only after
+     confirming the files are present at the project root, remove the temporary
+     ZIP and the now-empty extracted wrapper directory. Do not leave the
+     project nested under `zotero-overleaf-research-agent-*`.
+
+   If `git` is unavailable for the GitHub repository route, report that Git must
+   be installed by me (or ask whether I want help installing it) and stop. If
+   public network access is unavailable, report the exact failed command and
+   the next local action needed; do not substitute an unverified mirror or
+   fabricate files.
+
+3. **Confirm the result and read policy.** Confirm `README.md`, `AGENTS.md`,
+   `WORKSPACE_LAYOUT.md`, and `.agents/` are now present. If any are missing,
+   stop and report the failed bootstrap check. Then read `README.md`,
+   `AGENTS.md`, `WORKSPACE_LAYOUT.md`, and
    `.agents/agents/zotero-overleaf-research-agent/AGENT.md`. Treat their
-   instructions as project policy for all later work. Inspect the worktree and
-   preserve the cloned files; do not change the template's workflow or install
-   an MCP server for Zotero. Do not install the optional Docling PDF-to-Markdown
-   dependency during bootstrap: it requires Python 3.10+ and may download local
-   model artifacts on first use. Install it only when I explicitly request PDF
-   conversion, using the command documented in `WORKSPACE_LAYOUT.md`.
+   instructions as project policy for all later work. Preserve the cloned Git
+   configuration when using the GitHub repository route; do not initialize a new
+   repository for the ZIP route, alter the template workflow, or configure a
+   Zotero MCP server.
 
-4. **Create the local Codex configuration safely.** If
-   `.codex/config.toml` does not exist, copy it from
-   `.codex/config.toml.example`. If it already exists, preserve it and only
-   report that fact. This configuration is useful to Codex; OpenCode may simply
-   retain it as project-local documentation and should not invent an OpenCode
-   configuration format. Do not run `npx`, start a browser, or connect to a
-   Chrome DevTools endpoint as part of this setup.
+4. **Create local Codex configuration safely.** If `.codex/config.toml` does
+   not exist, copy it from `.codex/config.toml.example`. If it already exists,
+   preserve it and only report that fact. This configuration is useful to
+   Codex; OpenCode may retain it as project-local documentation and should not
+   invent an OpenCode configuration format. Do not run `npx`, start a browser,
+   or connect to a Chrome DevTools endpoint as part of this setup.
 
-5. **Install and verify the direct Zotero client.** The supported client is a
-   user-level uv tool:
+5. **Install and verify local research tools.** Install the supported
+   user-level Zotero CLI and the project-declared Docling dependency together:
 
    ```sh
-   uv tool install "zotero-mcp-server[pdf]==0.13.2"
+   uv tool install "zotero-mcp-server[pdf]==0.13.2" \
+     --with-requirements .agents/requirements-pdf-extraction.txt
    ```
 
-   First check whether `uv` and `zotero-cli` are already available. If `uv` is
-   missing, install it only using uv's official installer for the detected
-   operating system, then ensure its install directory is available in the
-   current command environment. Install the supported tool if `zotero-cli` is
-   missing; if it is present, do not replace or upgrade it unless needed to
-   meet the pinned version. Verify command availability with `zotero-cli --help`.
-   You may run `zotero-cli config` only to determine whether the client is
-   usable. Summarize its status without printing, storing, copying, or exposing
-   API keys, tokens, cookies, library contents, or absolute personal paths.
-   Do not run `zotero-mcp authorize-local`, do not configure a Zotero MCP
-   server, and do not make a read or write request to the Zotero library.
+   Install `uv` with its official installer if needed, then run the command
+   above. Verify with `zotero-cli --help` and `zotero-cli config`. Keep all
+   returned secrets and library data private. Do not authorize or access
+   Zotero, or configure a Zotero MCP server.
 
-6. **Verify the repository-owned bibliography guard.** Confirm that these
-   files exist:
-
-   - `.agents/skills/overleaf-cdp/SKILL.md`
-   - `.agents/skills/zotero-cli/SKILL.md`
-   - `.agents/skills/zotero-cli/reference.md`
-   - `.agents/skills/zotero-cli/scripts/sync_zotero_bibliography.py`
-   - `.agents/skills/zotero-cli/scripts/test_sync_zotero_bibliography.py`
-   - `.agents/requirements-pdf-extraction.txt`
-   - `.agents/scripts/extract_pdf_to_markdown.py`
+6. **Verify the bibliography guard.** Confirm that
+   `.agents/skills/zotero-cli/scripts/test_sync_zotero_bibliography.py` and
+   `.agents/scripts/extract_pdf_to_markdown.py` exist.
 
    If `python3` is available, run:
 
@@ -94,32 +102,15 @@ Work through this procedure and report the final checklist.
    python3 .agents/skills/zotero-cli/scripts/test_sync_zotero_bibliography.py
    ```
 
-   This test must use only its temporary localhost fake API and must not access
-   Zotero data or manuscript files. Do not install Docling or run the PDF
-   converter during bootstrap: its optional dependency may download local model
-   artifacts on first use. If Python is absent, report it as a missing
-   prerequisite rather than installing it automatically.
+   If Python is absent, report it as a missing prerequisite; do not install it.
 
-7. **Leave accounts and live browser work for an explicit later request.** You
-   may check whether Google Chrome is installed and whether port 9222 is free,
-   but do not launch Chrome or log in. If I later request Overleaf work, use
-   the supplied OS-specific launcher in `.agents/scripts/`, which creates an
-   isolated task-only profile. If its browser detection fails, ask me for the
-   full browser executable path; never ask for a profile, login, or password.
-   A separate explicit request is required before creating an Overleaf project,
-   signing in, or editing a remote project.
+7. **Leave live services disconnected.** You may check Chrome and port 9222,
+   but do not launch Chrome or log in. For a later Overleaf request, use the
+   OS-specific launcher in `.agents/scripts/`; if it cannot find Chrome, ask
+   for its executable path only.
 
-8. **Finish with a concise readiness report.** State: the template revision
-   cloned; whether `.codex/config.toml` was created or preserved; the status of
-   Git, uv, `zotero-cli`, Python, the bibliography-guard test, Chrome, and port
-   9222; and the exact user action still required for any missing prerequisite.
-   Also state that Zotero and Overleaf remain unconnected until I explicitly
-   request and personally complete their respective authorization or login.
-
-For all future work in this project, follow `AGENTS.md`. Prefer `zotero-cli`
-for normal Zotero tasks, use visible Chrome/CDP only for public web research
-and authorized Overleaf work, and keep every externally visible claim
-traceable to a source. For an Overleaf source edit, read the target, make a
-bounded change, read it back, compile, and inspect both the PDF and compile
-log.
-
+8. **Report readiness.** Report the selected bootstrap method; the Git
+   revision and remote (or that the ZIP route intentionally has no Git
+   checkout); whether configuration was created or preserved; the status of
+   Git, uv, `zotero-cli`, Python, the test, Chrome, and port 9222; and each
+   missing prerequisite. State that Zotero and Overleaf remain unconnected.
