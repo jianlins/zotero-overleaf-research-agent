@@ -1,4 +1,5 @@
-# Copy this file to .codex/config.toml after completing the setup in TEMPLATE.md.
+# Copy this file to .codex/config.toml during the setup described in
+# CHATBOT_SETUP_PROMPT.md.
 # It contains no credentials. The browser URL assumes the supplied launcher,
 # which uses an isolated Chrome profile on port 9222. Zotero uses the direct
 # zotero-cli workflow described in AGENTS.md; no Zotero MCP is configured.

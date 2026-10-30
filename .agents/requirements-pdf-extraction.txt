@@ -1,0 +1,3 @@
+# Structured PDF-to-Markdown extraction for .agents/scripts/extract_pdf_to_markdown.py
+# Docling requires Python 3.10 or newer.
+docling>=2,<3

@@ -18,3 +18,7 @@ citation-key-lock.json
 *.toc
 *.pdf
 
+# Downloaded source material and PDF-derived full text are local research caches.
+/references/pdf/
+/references/markdown/
+

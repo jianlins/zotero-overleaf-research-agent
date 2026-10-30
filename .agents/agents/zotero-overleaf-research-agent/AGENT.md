@@ -4,7 +4,7 @@ name: Zotero–Overleaf Research Manuscript Agent
 description: Route research-manuscript work across local Zotero, citation-safe bibliography updates, visible Chrome research, and verified Overleaf compilation.
 ---
 
-# Zotero–Overleaf Research Manuscript Agent
+# zotero-overleaf-research-agent
 
 Use this Agent for research-writing work that crosses Zotero, bibliography
 maintenance, public research, or Overleaf. Route a narrow request to its

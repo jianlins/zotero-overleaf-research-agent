@@ -19,6 +19,12 @@ Before the first write, ensure the user has authorized the local Zotero write
 workflow. Confirm only destructive actions, such as deletion, duplicate
 merging, or large batch edits.
 
+## Project PDF extraction
+
+When a project PDF must be converted to Markdown, read `WORKSPACE_LAYOUT.md`
+and run `.agents/scripts/extract_pdf_to_markdown.py`. It uses the project’s
+local Docling dependency; never substitute model-generated extraction.
+
 ## Stable BibLaTeX updates
 
 For an existing manuscript, do not overwrite `references.bib` with a raw

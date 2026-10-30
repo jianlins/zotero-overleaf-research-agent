@@ -1,7 +1,7 @@
-# Research LaTeX + CDP + Overleaf + Zotero
+# zotero-overleaf-research-agent
 
-A credential-free starter for research projects that use LaTeX, an Overleaf
-project in visible Chrome, and a local Zotero library.
+A credential-free research-manuscript workflow for projects that use LaTeX, an
+Overleaf project in visible Chrome, and a local Zotero library.
 
 It intentionally versions the workflow, not private state: no API keys,
 browser cookies, Zotero library data, or machine-specific Chrome ports belong
@@ -26,21 +26,23 @@ in this repository.
   credentials.
 - Direct Zotero CLI guidance: the Zotero workflow does not require an MCP
   server configuration.
-- `.agents/scripts/start-research-chrome.sh`, `-linux.sh`, and `.ps1`: separate Chrome
-  profiles for macOS, Linux, and Windows CDP work.
-- `CHATBOT_SETUP_PROMPT.md`: a platform-neutral prompt to paste into Codex,
-  Copilot, or another coding assistant after cloning.
+- `.agents/scripts/start-research-chrome.sh`, `-linux.sh`, `.ps1`, and `.cmd`:
+  separate Chrome profiles for macOS, Linux, and Windows CDP work.
+- `.agents/requirements-pdf-extraction.txt`: the optional, project-scoped
+  Docling dependency declaration used by the PDF converter.
+- `CHATBOT_SETUP_PROMPT.md`: a platform-neutral bootstrap prompt to paste into
+  Codex or OpenCode from a new, empty folder.
 
 ## Use it
 
 ```bash
-git clone <your-template-repository-url> my-research-project
-cd my-research-project
+git clone https://github.com/jianlins/zotero-overleaf-research-agent.git
+cd zotero-overleaf-research-agent
 ```
 
-Then either follow [TEMPLATE.md](TEMPLATE.md), or paste the contents of
-[`CHATBOT_SETUP_PROMPT.md`](CHATBOT_SETUP_PROMPT.md) into your coding
-assistant. The assistant should do the local, non-secret setup and explain any
+For a new, empty folder, paste the contents of
+[`CHATBOT_SETUP_PROMPT.md`](CHATBOT_SETUP_PROMPT.md) into Codex or OpenCode.
+It will safely clone this template, perform the local setup, and explain any
 machine-specific prerequisite that still needs you.
 
 ### Where your work belongs
@@ -50,6 +52,40 @@ unless you are maintaining the template. Put your manuscript and bibliography
 at the project root, research PDFs and extracted Markdown in `references/`,
 and personal working notes in `notes/` (create it when needed). This keeps
 your research material separate from the template's tooling.
+
+[`WORKSPACE_LAYOUT.md`](WORKSPACE_LAYOUT.md) defines the full directory
+contract, including plans, handoffs, the research log, and which artifacts stay
+local rather than entering Git.
+
+### Extracting PDF text
+
+The template includes a controlled PDF-to-Markdown command based on Docling.
+It preserves reading order and tables where possible, and never delegates text
+reconstruction to an LLM:
+
+```bash
+uv run --python 3.12 \
+  --with-requirements .agents/requirements-pdf-extraction.txt \
+  python .agents/scripts/extract_pdf_to_markdown.py \
+  --input references/pdf/ZOTEROITEMKEY.pdf
+```
+
+It writes `references/markdown/ZOTEROITEMKEY.md` by default, refuses to
+overwrite it without `--force`, and reports when a scanned PDF must be OCRed
+first. OCR is opt-in through `--ocr` after local Docling OCR setup. Docling
+requires Python 3.10+; `uv` supplies Python 3.12 in the command above. Its
+dependency is declared in
+`.agents/requirements-pdf-extraction.txt`; see
+[`WORKSPACE_LAYOUT.md`](WORKSPACE_LAYOUT.md) for the full contract and model
+license review requirement.
+
+### Updating the manuscript bibliography
+
+The canonical BibLaTeX file is `references.bib` at the project root. The
+Zotero guard reads the local Zotero API, dry-runs a merge, and writes only the
+local bibliography and its ignored key lock after `--apply`; it does not modify
+Zotero or manage PDF files. The exact command and review gate are in
+[`WORKSPACE_LAYOUT.md`](WORKSPACE_LAYOUT.md).
 
 ### Starting the research browser
 
@@ -73,6 +109,13 @@ powershell -ExecutionPolicy Bypass -File .\.agents\scripts\start-research-chrome
 # Or from Command Prompt
 .\.agents\scripts\start-research-chrome.cmd
 ```
+
+The Linux and Windows launchers accept `--port PORT` and `-Port PORT`,
+respectively. The macOS launcher accepts `--port PORT`. When using a port
+other than 9222, make the same change to the browser URL in the local,
+untracked `.codex/config.toml`. Codex starts the CDP bridge from that
+configuration with `npx`, so Node.js/npm must be available when that bridge is
+used; it downloads `chrome-devtools-mcp` on first use.
 
 The Windows launcher looks for `chrome.exe` on `PATH` and in Chrome's standard
 per-machine and per-user install locations. The Linux launcher looks for
